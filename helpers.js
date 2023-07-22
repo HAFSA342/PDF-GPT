@@ -9,6 +9,17 @@ const generateJWT = (payload) => {
     return token
 }
 
+function normalizeDocuments(docs) {
+    return docs.map((doc) => {
+        if (typeof doc.pageContent === "string") {
+            return doc.pageContent;
+        } else if (Array.isArray(doc.pageContent)) {
+            return doc.pageContent.join("\n");
+        }
+    })
+}
+
 module.exports = {
-    generateJWT
+    generateJWT,
+    normalizeDocuments
 }

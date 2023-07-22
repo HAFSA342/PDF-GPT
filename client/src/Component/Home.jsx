@@ -1,12 +1,23 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
 
 function Home() {
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [userQuestion, setUserQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [messages, setMessages] = useState([]);
+  const onDrop = (acceptedFiles) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      setSelectedFile(acceptedFiles[0]);
+    }
+  };
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: ".pdf",
+  });
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -22,6 +33,8 @@ function Home() {
       alert("Please enter a question.");
       return;
     }
+    const newData = [...messages, { role: "user", content: userQuestion }];
+    setMessages(newData);
 
     let formData = new FormData();
     formData.append("question", userQuestion.trim());
@@ -31,36 +44,46 @@ function Home() {
     }
 
     try {
-      const response = await axios.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:4000/api/post/chat-with-docs",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const { data } = response;
+      console.log("data", data.data.answer);
 
-      setAnswer(response.data.answer);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "assistant", content: data.data.answer },
+      ]);
+
+      setAnswer(data.answer);
     } catch (error) {
       console.error(error);
       alert("An error occurred while processing the file.");
     }
   };
-
+  console.log("messages", messages);
   return (
     <div className="App">
       <h1>PDF Reader</h1>
       <div>
         <h2>Upload PDF File</h2>
-        <label htmlFor="fileInput" className="fileInputLabel">
-          Choose a PDF file
-        </label>
-        <input
-          type="file"
-          id="fileInput"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-          accept=".pdf"
-        />
-        {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+        <div
+          {...getRootProps()}
+          className={`dropzone ${isDragActive ? "active" : ""}`}
+        >
+          <input {...getInputProps()} />
+          {selectedFile ? (
+            <p>Selected file: {selectedFile.name}</p>
+          ) : (
+            <p>Drag and drop a PDF file here, or click to select one.</p>
+          )}
+        </div>
       </div>
       <div>
         <h2>Ask a Question</h2>
@@ -71,14 +94,27 @@ function Home() {
           onChange={handleQuestionChange}
           placeholder="Ask your question here..."
         />
-        <button onClick={handleQuestionSubmit}>Submit</button>
-      </div>
-      {answer && (
-        <div>
-          <h2>Answer</h2>
-          <p>{answer}</p>
+        <div className="buttonWrapper">
+          <button onClick={handleQuestionSubmit}>Submit</button>
         </div>
-      )}
+      </div>
+      <div className="messageWrapper">
+        {messages?.map((message, ind) => (
+          <div
+            className={`wrapper ${
+              message?.role === "user" ? "userMessage" : "assistantMessage"
+            }`}
+            key={ind}
+          >
+            <div className="chat">
+              <div className="profile"></div>
+              <div className="message" id={ind}>
+                {message?.content}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
