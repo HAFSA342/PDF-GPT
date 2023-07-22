@@ -1,15 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
+import ViewPdf from "./PdfViewer";
 
 function Home() {
-  const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [userQuestion, setUserQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
   const [messages, setMessages] = useState([]);
+
   const onDrop = (acceptedFiles) => {
-    if (acceptedFiles && acceptedFiles.length > 0) {
+    if (acceptedFiles && acceptedFiles?.length > 0) {
       setSelectedFile(acceptedFiles[0]);
     }
   };
@@ -18,9 +18,11 @@ function Home() {
     onDrop,
     accept: ".pdf",
   });
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
+
+  const handleTextareaKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      handleQuestionSubmit(event);
+    }
   };
 
   const handleQuestionChange = (event) => {
@@ -28,7 +30,8 @@ function Home() {
     setUserQuestion(question);
   };
 
-  const handleQuestionSubmit = async () => {
+  const handleQuestionSubmit = async (event) => {
+    event.preventDefault();
     if (!userQuestion.trim()) {
       alert("Please enter a question.");
       return;
@@ -38,6 +41,7 @@ function Home() {
 
     let formData = new FormData();
     formData.append("question", userQuestion.trim());
+    setUserQuestion("");
 
     if (selectedFile) {
       formData.append("file", selectedFile);
@@ -60,31 +64,39 @@ function Home() {
         ...prevMessages,
         { role: "assistant", content: data.data.answer },
       ]);
-
-      setAnswer(data.answer);
     } catch (error) {
       console.error(error);
       alert("An error occurred while processing the file.");
     }
   };
-  console.log("messages", messages);
+
   return (
     <div className="App">
       <h1>PDF Reader</h1>
-      <div>
-        <h2>Upload PDF File</h2>
-        <div
-          {...getRootProps()}
-          className={`dropzone ${isDragActive ? "active" : ""}`}
-        >
-          <input {...getInputProps()} />
-          {selectedFile ? (
-            <p>Selected file: {selectedFile.name}</p>
-          ) : (
-            <p>Drag and drop a PDF file here, or click to select one.</p>
-          )}
+      {selectedFile?.name ? (
+        <>
+          <ViewPdf file={selectedFile} />
+          <div className="buttonWrapper">
+            <button onClick={() => setSelectedFile(null)}>Change Pdf</button>
+          </div>
+        </>
+      ) : (
+        <div>
+          <h2>Upload PDF File</h2>
+          <div
+            {...getRootProps()}
+            className={`dropzone ${isDragActive ? "active" : ""}`}
+          >
+            <input accept="application/pdf" {...getInputProps()} />
+            {selectedFile ? (
+              <p>Selected file: {selectedFile?.name}</p>
+            ) : (
+              <p>Drag and drop a PDF file here, or click to select one.</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
       <div>
         <h2>Ask a Question</h2>
         <textarea
@@ -93,10 +105,11 @@ function Home() {
           value={userQuestion}
           onChange={handleQuestionChange}
           placeholder="Ask your question here..."
+          onKeyPress={handleTextareaKeyPress}
         />
-        <div className="buttonWrapper">
+        {/* <div className="buttonWrapper">
           <button onClick={handleQuestionSubmit}>Submit</button>
-        </div>
+        </div> */}
       </div>
       <div className="messageWrapper">
         {messages?.map((message, ind) => (

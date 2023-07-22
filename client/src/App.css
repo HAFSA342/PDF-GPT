@@ -1,4 +1,6 @@
-/* :root {
+@import url("https://fonts.googleapis.com/css2?family=Lumanosimo&display=swap");
+
+:root {
   --main-bg-color: #1c1e2c;
   --white: white;
 }
@@ -6,243 +8,9 @@
 iframe[style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; border: none; z-index: 2147483647;"] {
   pointer-events: none;
 }
-.App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+body {
+  font-family: "Lumanosimo", cursive !important;
 }
-
-h1 {
-  margin-bottom: 20px;
-}
-
-div {
-  margin-bottom: 20px;
-}
-
-input[type="file"] {
-  display: none;
-}
-
-label {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-label:hover {
-  background-color: #45a049;
-}
-
-textarea {
-  width: 100%;
-  resize: none;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-.main {
-  width: 100vw;
-  height: 100vh;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.container {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  padding-bottom: 20px;
-  scroll-behavior: smooth;
-}
-.container::-webkit-scrollbar {
-  display: none;
-}
-
-.wrapper {
-  width: 100%;
-  padding: 15px;
-}
-
-.ai {
-  background: white;
-}
-
-.chat {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.profile {
-  width: 36px;
-  height: 36px;
-  border-radius: 5px;
-  background: #5436da;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.ai .profile {
-  background: #10a37f;
-}
-
-.profile img {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
-}
-
-.message {
-  flex: 1;
-  color: #dcdcdc;
-  font-size: 20px;
-  max-width: 100%;
-  overflow-x: scroll;
-  white-space: pre-wrap;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.message::-webkit-scrollbar {
-  display: none;
-}
-
-form {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 10px;
-  background: #40414f;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-
-textarea {
-  width: 100%;
-  color: black;
-  font-size: 18px;
-  padding: 10px;
-  background: transparent;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-}
-
-button {
-  outline: 0;
-  border: 0;
-  cursor: pointer;
-  background: transparent;
-}
-
-form img {
-  width: 30px;
-  height: 30px;
-}
-
-.blinking-cursor {
-  font-weight: 510;
-  font-size: 30px;
-  color: white;
-  -webkit-animation: 1s blink step-end infinite;
-  -moz-animation: 1s blink step-end infinite;
-  -ms-animation: 1s blink step-end infinite;
-  -o-animation: 1s blink step-end infinite;
-  animation: 1s blink step-end infinite;
-}
-
-@keyframes blink {
-
-  from,
-  to {
-    color: transparent;
-  }
-
-  50% {
-    color: white;
-  }
-}
-
-@-moz-keyframes blink {
-
-  from,
-  to {
-    color: transparent;
-  }
-
-  50% {
-    color: white;
-  }
-}
-
-@-webkit-keyframes blink {
-
-  from,
-  to {
-    color: transparent;
-  }
-
-  50% {
-    color: white;
-  }
-}
-
-@-ms-keyframes blink {
-
-  from,
-  to {
-    color: transparent;
-  }
-
-  50% {
-    color: white;
-  }
-}
-
-@-o-keyframes blink {
-
-  from,
-  to {
-    color: transparent;
-  }
-
-  50% {
-    color: white;
-  }
-} */
 
 .App {
   max-width: 800px;
@@ -261,6 +29,7 @@ h2 {
 textarea {
   width: 100%;
   resize: vertical;
+  outline: none;
 }
 
 .buttonWrapper {
@@ -295,8 +64,6 @@ textarea {
   padding: 10px;
   border-radius: 5px;
 }
-
-/* Add these styles to your existing styles or in a separate CSS file */
 
 .dropzone {
   border: 2px dashed #007bff;

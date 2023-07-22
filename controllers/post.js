@@ -75,7 +75,7 @@ const chatWithDocs = async (req, res) => {
         return res.send({ success: true, data: quesAndAns })
 
     } catch (e) {
-        console.log('e', e)
+        console.log('e', e.response)
         return res.send({ success: false, message: 'Something went wrong', e })
     }
 }
